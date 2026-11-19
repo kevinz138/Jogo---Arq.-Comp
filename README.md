@@ -4,7 +4,7 @@ Jogo feito em HTML, CSS e JavaScript para treinar os termos de Arquitetura Compu
 
 O Chipinho é um robozinho comilão, dramático e que ama trocadilho de computador. Cada resposta certa enche a barriguinha dele de bits. Quando você erra, ele fica com cara de enjoado, mas logo se recupera.
 
-Jogue aqui: https://SEU-USUARIO.github.io/arqcomp-cruzadinha/
+Jogue aqui: [https://kevinz138.github.io/Jogo---Arq.-Comp/](https://kevinz138.github.io/Jogo---Arq.-Comp/)
 
 ## Como jogar
 
