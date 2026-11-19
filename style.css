@@ -1,232 +1,653 @@
-/* Fia e os Fios da Arquitetura - visual claro e animado */
+/* Chipinho Faminto - visual claro, estilo pergaminho (inspirado em Silksong) */
 
 body {
-  font-family: "Trebuchet MS", Verdana, sans-serif;
-  background-color: #fff6e5;
-  background-image: radial-gradient(#ffe2b0 2px, transparent 2px);
-  background-size: 28px 28px;
-  color: #3a1f2b;
+  font-family: Georgia, "Times New Roman", serif;
+  background-color: #efe6d2;
+  background-image:
+    radial-gradient(#d3c5a2 1.2px, transparent 1.4px),
+    radial-gradient(ellipse at top, #f6efdc 0%, #e6d9bb 100%);
+  background-size: 34px 34px, 100% 100%;
+  background-attachment: fixed;
+  color: #1b1a1f;
   margin: 0;
-  padding: 15px;
+  padding: 20px 15px;
   text-align: center;
 }
 
 /* ----- Cabeçalho ----- */
 header h1 {
-  color: #c8283c;
-  font-size: 34px;
-  margin: 0 0 5px 0;
+  font-size: 38px;
+  color: #7a1523;
+  margin: 0;
+  text-shadow: 3px 3px 0 #c9a55a;
 }
 
 header p {
-  margin: 0;
+  margin: 6px 0 0 0;
   font-size: 16px;
 }
 
-/* Fia balançando no fio */
-#balanco {
-  height: 90px;
+/* ----- Chipinho ----- */
+#area-chipinho {
+  margin: 15px auto;
+}
+
+#fala {
   position: relative;
-  transform-origin: top center;
-  animation: balancar 3s ease-in-out infinite;
-}
-
-#fio-topo {
-  width: 3px;
-  height: 45px;
-  background-color: #c8283c;
-  margin: 0 auto;
-}
-
-#fia {
-  font-size: 46px;
-}
-
-@keyframes balancar {
-  0% { transform: rotate(-6deg); }
-  50% { transform: rotate(6deg); }
-  100% { transform: rotate(-6deg); }
-}
-
-/* ----- Abas ----- */
-#abas {
-  margin: 20px 0;
-}
-
-#abas button {
-  font-family: inherit;
-  font-size: 17px;
+  display: inline-block;
+  max-width: 380px;
+  background-color: #fbf6e9;
+  border: 3px solid #1b1a1f;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 16px;
   font-weight: bold;
-  padding: 10px 24px;
-  margin: 3px;
-  background-color: white;
-  color: #c8283c;
-  border: 3px solid #c8283c;
-  border-radius: 25px;
-  cursor: pointer;
+  margin-bottom: 14px;
 }
 
-#abas button.ativa {
-  background-color: #c8283c;
-  color: white;
-}
-
-/* ----- Placar e fio de progresso ----- */
-#placar {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-#contador {
-  font-size: 22px;
-  font-weight: bold;
-  color: #c8283c;
-  margin: 5px 0 15px 0;
-}
-
-#fio {
-  position: relative;
-  height: 10px;
-  background-color: #ffd9a0;
-  border-radius: 10px;
-  margin: 25px 20px 10px 20px;
-}
-
-#fio-cheio {
-  height: 100%;
-  width: 0%;
-  background-color: #c8283c;
-  border-radius: 10px;
-  transition: width 0.6s;
-}
-
-#fia-andando {
+/* bico do balão de fala */
+#fala::after {
+  content: "";
   position: absolute;
-  top: -22px;
-  left: 0%;
-  font-size: 30px;
-  transform: translateX(-50%);
-  transition: left 0.6s;
+  bottom: -14px;
+  left: 50%;
+  margin-left: -10px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 14px solid #1b1a1f;
 }
 
-/* ----- Pergunta ----- */
-#pergunta-caixa {
-  background-color: white;
-  border: 4px solid #f2b134;
-  border-radius: 25px;
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  box-shadow: 0 6px 0 #e29a14;
-}
-
-#numero {
-  color: #e29a14;
-  font-weight: bold;
-  margin: 0;
-}
-
-#pergunta {
-  font-size: 21px;
-  margin: 10px 0 20px 0;
-}
-
-/* Botões de resposta */
-#opcoes button {
+#chipinho {
   display: block;
-  width: 100%;
-  font-family: inherit;
-  font-size: 18px;
-  padding: 14px;
-  margin: 10px 0;
-  background-color: #fff6e5;
-  color: #3a1f2b;
-  border: 3px solid #f2b134;
-  border-radius: 18px;
-  cursor: pointer;
-  transition: transform 0.15s;
+  margin: 0 auto;
+  animation: respirar 2.4s ease-in-out infinite;
 }
 
-#opcoes button:hover {
-  transform: scale(1.03);
-  background-color: #ffe9b8;
+@keyframes respirar {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
 }
 
-#opcoes button.selecionada {
-  background-color: #ffd36b;
-  border-color: #c8283c;
+/* Antena piscando */
+.antena {
+  animation: piscarAntena 1.2s infinite;
 }
 
-#opcoes button.certa {
-  background-color: #b9f0c4;
-  border-color: #2e9e4f;
-  animation: pulo 0.5s;
+@keyframes piscarAntena {
+  0% { fill: #9e1b2c; }
+  50% { fill: #c9a55a; }
+  100% { fill: #9e1b2c; }
 }
 
-#opcoes button.errada {
-  background-color: #ffc2c2;
-  border-color: #c8283c;
-  animation: tremer 0.4s;
+/* Bracinhos balançando */
+.braco-esq {
+  transform-origin: 42px 146px;
+  animation: acenarEsq 2s ease-in-out infinite;
 }
 
-@keyframes pulo {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
+.braco-dir {
+  transform-origin: 158px 146px;
+  animation: acenarDir 2s ease-in-out infinite;
 }
 
-@keyframes tremer {
+@keyframes acenarEsq {
+  0% { transform:; }
+  50% { transform:; }
+  100% { transform:; }
+}
+
+@keyframes acenarDir {
+  0% { transform:; }
+  50% { transform:; }
+  100% { transform:; }
+}
+
+/* Olhos piscando */
+.olho {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: piscar 4s infinite;
+}
+
+@keyframes piscar {
+  0% { transform: scaleY(1); }
+  94% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+  100% { transform: scaleY(1); }
+}
+
+/* ----- Humores do Chipinho ----- */
+/* por padrão só aparece o rosto normal */
+#chipinho .olhos-feliz,
+#chipinho .olhos-triste,
+#chipinho .boca-feliz,
+#chipinho .boca-triste {
+  display: none;
+}
+
+#chipinho.feliz .olhos-normal,
+#chipinho.feliz .boca-normal {
+  display: none;
+}
+
+#chipinho.feliz .olhos-feliz,
+#chipinho.feliz .boca-feliz {
+  display: block;
+}
+
+#chipinho.feliz {
+  animation: pularFeliz 0.5s ease-in-out 2;
+}
+
+#chipinho.triste .olhos-normal,
+#chipinho.triste .boca-normal {
+  display: none;
+}
+
+#chipinho.triste .olhos-triste,
+#chipinho.triste .boca-triste {
+  display: block;
+}
+
+#chipinho.triste {
+  animation: tremerTriste 0.4s ease-in-out 2;
+}
+
+/* boca de comer abrindo e fechando */
+.boca-feliz {
+  transform-origin: 100px 98px;
+  animation: nhac 0.4s ease-in-out 3;
+}
+
+@keyframes nhac {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes pularFeliz {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-22px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes tremerTriste {
   0% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
   100% { transform: translateX(0); }
 }
 
-#mensagem {
-  font-size: 19px;
+/* barriga enchendo suavemente */
+#svg-barriga {
+  transition: width 0.8s;
+}
+
+#contador {
+  font-size: 22px;
   font-weight: bold;
-  min-height: 26px;
+  color: #9e1b2c;
+  margin: 12px 0 0 0;
+}
+
+/* ----- Abas ----- */
+#abas {
+  margin: 15px 0;
+}
+
+#abas button {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 9px 24px;
+  margin: 3px;
+  background-color: #fbf6e9;
+  color: #7a1523;
+  border: 3px solid #7a1523;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#abas button.ativa {
+  background-color: #7a1523;
+  color: #fff;
+}
+
+/* ----- Pergunta ----- */
+#pergunta-caixa {
+  max-width: 560px;
+  margin: 0 auto 20px auto;
+  padding: 22px;
+  background-color: #fbf6e9;
+  border: 4px solid #1b1a1f;
+  border-radius: 8px;
+  box-shadow: 6px 6px 0 #4f6a73;
+}
+
+#numero {
+  color: #7a7466;
+  font-size: 14px;
+  margin: 0;
+}
+
+#enunciado {
+  color: #9e1b2c;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 12px 0 4px 0;
+}
+
+#pergunta {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+}
+
+/* Cada opção tem uma cor diferente */
+#opcoes button {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 13px;
+  margin: 10px 0;
+  background-color: #fbf6e9;
+  color: #1b1a1f;
+  border: 3px solid #4f6a73;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#opcoes button:nth-child(2) { border-color: #9e1b2c; }
+#opcoes button:nth-child(3) { border-color: #b08a3e; }
+#opcoes button:nth-child(4) { border-color: #7a1523; }
+
+#opcoes button:hover {
+  transform: translateY(-3px);
+  background-color: #f3ead2;
+}
+
+#opcoes button.selecionada {
+  background-color: #e6d29a;
+  border-color: #1b1a1f;
+}
+
+#opcoes button.certa {
+  border-color: #4a6b3a;
+  background-color: #dfe8d2;
+  animation: pulo 0.4s;
+}
+
+#opcoes button.errada {
+  border-color: #9e1b2c;
+  background-color: #f0d6d4;
+  animation: tremer 0.4s;
+}
+
+@keyframes pulo {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes tremer {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+  100% { transform: translateX(0); }
+}
+
+#mensagem {
+  font-size: 17px;
+  font-weight: bold;
+  min-height: 24px;
   margin: 10px 0 5px 0;
 }
 
 #explicacao {
-  font-size: 15px;
-  background-color: #fff0cf;
-  border-radius: 12px;
-  padding: 10px;
   display: none;
   text-align: left;
+  font-size: 15px;
+  background-color: #f1e6c4;
+  border-left: 6px solid #b08a3e;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 10px 0 0 0;
 }
 
-/* ----- Botões principais ----- */
-#botoes button {
+/* ----- Botões ----- */
+#botoes button,
+#botoes-arrastar button {
   font-family: inherit;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: bold;
-  padding: 12px 22px;
+  padding: 12px 26px;
   margin: 5px;
-  border: none;
-  border-radius: 25px;
-  color: white;
+  border: 3px solid #1b1a1f;
+  border-radius: 6px;
+  color: #1b1a1f;
   cursor: pointer;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 0 #1b1a1f;
 }
 
-#btn-conferir {
-  background-color: #2e9e4f;
+#btn-conferir,
+#btn-conferir-a {
+  background-color: #8fae7a;
 }
 
-#btn-proxima {
-  background-color: #e29a14;
+#btn-proxima,
+#btn-proxima-a {
+  display: none;
+  background-color: #c9a55a;
+}
+
+#btn-reiniciar,
+#btn-reiniciar-a {
+  background-color: #b86b66;
+}
+
+#botoes button:hover,
+#botoes-arrastar button:hover {
+  transform: translateY(-2px);
+}
+
+#botoes button:active,
+#botoes-arrastar button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #1b1a1f;
+}
+
+/* ================= MODO ARRASTAR ================= */
+
+/* o quiz agora fica escondido até clicar na aba */
+#tela-jogar {
   display: none;
 }
 
-#btn-reiniciar {
-  background-color: #c8283c;
+#tela-arrastar {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-#botoes button:hover {
+#rodada-info {
+  font-weight: bold;
+  font-size: 18px;
+  color: #7a1523;
+  margin: 0;
+}
+
+#instrucao {
+  font-size: 15px;
+  margin: 4px 0 18px 0;
+}
+
+/* pistas em 2 colunas */
+#alvos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.alvo {
+  position: relative;
+  text-align: left;
+  background-color: #fbf6e9;
+  border: 3px solid #1b1a1f;
+  border-radius: 8px;
+  padding: 16px 14px 14px 14px;
+  box-shadow: 5px 5px 0 #4f6a73;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.alvo:nth-child(2) { box-shadow: 5px 5px 0 #9e1b2c; }
+.alvo:nth-child(3) { box-shadow: 5px 5px 0 #b08a3e; }
+.alvo:nth-child(4) { box-shadow: 5px 5px 0 #7a1523; }
+
+.num-alvo {
+  position: absolute;
+  top: -13px;
+  left: -9px;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #c9a55a;
+  border: 3px solid #1b1a1f;
+  border-radius: 50%;
+}
+
+.texto-alvo {
+  font-size: 16px;
+  margin: 4px 0 12px 0;
+  min-height: 44px;
+}
+
+/* o espaço onde a caixinha encaixa */
+.encaixe {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f0de;
+  border: 3px dashed #b8ab8d;
+  border-radius: 6px;
+  color: #8b8472;
+  font-size: 14px;
+}
+
+.encaixe:empty::before {
+  content: "arraste a caixinha aqui";
+}
+
+.alvo.destaque {
+  background-color: #e8dcc0;
+  border-color: #7a1523;
+}
+
+.alvo.destaque .encaixe {
+  border-color: #7a1523;
+}
+
+.alvo.certa {
+  background-color: #e8efdc;
+  border-color: #4a6b3a;
+}
+
+.alvo.certa .encaixe {
+  background-color: #dfe8d2;
+  border: 3px solid #4a6b3a;
+}
+
+.alvo.errou {
+  border-color: #9e1b2c;
+  animation: tremer 0.4s;
+}
+
+/* bandeja com as caixinhas */
+#bandeja {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  margin: 22px 0 10px 0;
+  padding: 14px;
+  background-color: #f3ead2;
+  border: 3px dashed #b08a3e;
+  border-radius: 8px;
+}
+
+#bandeja.destaque {
+  background-color: #e9d9a6;
+}
+
+#bandeja:empty::before {
+  content: "Todas as caixinhas estão nas pistas! Clique em Conferir.";
+  color: #7a7466;
+  font-size: 14px;
+}
+
+.caixinha {
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1b1a1f;
+  border: 3px solid #1b1a1f;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #1b1a1f;
+  transition: transform 0.15s;
+}
+
+.caixinha.cor0 { background-color: #e8dfc8; }
+.caixinha.cor1 { background-color: #d6b46a; }
+.caixinha.cor2 { background-color: #9fb3b6; }
+.caixinha.cor3 { background-color: #c58a84; }
+
+.caixinha:hover {
   transform: translateY(-2px);
+}
+
+.caixinha.selecionada {
+  outline: 4px solid #7a1523;
+  outline-offset: 2px;
+  transform: translateY(-3px);
+}
+
+.caixinha.arrastando {
+  opacity: 0.3;
+}
+
+/* a "cópia" que acompanha o dedo/mouse */
+.caixinha.fantasma {
+  position: fixed;
+  margin: 0;
+  z-index: 1000;
+  pointer-events: none;
+  cursor: grabbing;
+  transform: scale(1.05);
+  box-shadow: 0 10px 0 rgba(27, 26, 31, 0.3);
+}
+
+.caixinha.travada {
+  background-color: #8fae7a;
+  cursor: default;
+  pointer-events: none;
+}
+
+.caixinha.volta {
+  animation: tremer 0.4s;
+}
+
+.encaixe .caixinha {
+  margin: 6px;
+}
+
+#botoes-arrastar {
+  margin-top: 8px;
+}
+
+/* caixa de detalhes */
+#detalhes {
+  max-width: 700px;
+  margin: 18px auto 10px auto;
+  padding: 14px 18px;
+  text-align: left;
+  background-color: #fbf6e9;
+  border: 4px solid #1b1a1f;
+  border-radius: 8px;
+  box-shadow: 6px 6px 0 #b08a3e;
+}
+
+#detalhes h3 {
+  margin: 0 0 8px 0;
+  color: #7a1523;
+}
+
+#detalhes p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.bloco {
+  margin: 10px 0;
+  padding: 8px 12px;
+  font-size: 15px;
+  background-color: #f1e6c4;
+  border-left: 6px solid #b08a3e;
+  border-radius: 6px;
+}
+
+.bloco.certo {
+  background-color: #e3ebd6;
+  border-left-color: #4a6b3a;
+}
+
+.bloco ul {
+  margin: 6px 0 0 0;
+  padding-left: 20px;
+}
+
+.bloco li {
+  margin: 3px 0;
+}
+
+.bloco li.nova {
+  font-weight: bold;
+}
+
+#acertos-primeira {
+  font-size: 14px;
+  color: #6b6556;
+}
+
+/* ----- Celular e telas pequenas ----- */
+@media (max-width: 640px) {
+  header h1 {
+    font-size: 30px;
+  }
+
+  #chipinho {
+    width: 130px;
+    height: auto;
+  }
+
+  #fala {
+    font-size: 14px;
+    max-width: 90%;
+  }
+
+  #alvos {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .texto-alvo {
+    min-height: 0;
+  }
+
+  /* a bandeja fica sempre visível embaixo da tela */
+  #bandeja {
+    position: sticky;
+    bottom: 8px;
+    z-index: 20;
+    background-color: #f3ead2;
+    box-shadow: 0 -6px 14px rgba(27, 26, 31, 0.18);
+  }
+
+  .caixinha {
+    padding: 9px 12px;
+    font-size: 15px;
+  }
 }
 
 /* ----- Modo estudar ----- */
@@ -234,60 +655,109 @@ header p {
   display: none;
 }
 
-#dica-estudo {
-  font-size: 17px;
-}
-
 #cartoes {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
+  gap: 16px;
   margin-top: 15px;
 }
 
 .cartao {
   width: 240px;
-  min-height: 150px;
-  background-color: white;
-  border: 4px solid #f2b134;
-  border-radius: 20px;
+  min-height: 140px;
+  background-color: #fbf6e9;
+  border: 3px solid #4f6a73;
+  border-radius: 8px;
   padding: 15px;
   cursor: pointer;
-  box-shadow: 0 5px 0 #e29a14;
-  transition: transform 0.2s;
+  box-shadow: 5px 5px 0 #4f6a73;
+  transition: all 0.2s;
 }
 
+.cartao:nth-child(4n+2) { border-color: #9e1b2c; box-shadow: 5px 5px 0 #9e1b2c; }
+.cartao:nth-child(4n+3) { border-color: #b08a3e; box-shadow: 5px 5px 0 #b08a3e; }
+.cartao:nth-child(4n+4) { border-color: #7a1523; box-shadow: 5px 5px 0 #7a1523; }
+
 .cartao:hover {
-  transform: translateY(-4px) rotate(-1deg);
+  transform: translateY(-4px);
 }
 
 .cartao .numero-cartao {
-  color: #e29a14;
-  font-weight: bold;
+  color: #7a7466;
+  font-size: 13px;
 }
 
 .cartao .titulo-cartao {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
-  color: #c8283c;
+  color: #9e1b2c;
   margin: 8px 0;
 }
 
 .cartao .texto-cartao {
   font-size: 15px;
-  margin: 5px 0;
+  margin: 6px 0;
+}
+
+.cartao .toque {
+  color: #7a7466;
+  font-size: 13px;
 }
 
 .cartao.virado {
-  background-color: #fff0cf;
-  border-color: #c8283c;
-  box-shadow: 0 5px 0 #c8283c;
-  animation: pulo 0.4s;
+  background-color: #f3ead2;
+  animation: pulo 0.3s;
 }
 
 footer {
-  margin-top: 35px;
+  margin-top: 40px;
   font-size: 13px;
-  color: #8a6a5a;
+  color: #6b6556;
+}
+
+
+/* ===== Toques estilo Silksong: pergaminho, tinta e fio dourado ===== */
+header h1 {
+  font-variant: small-caps;
+  letter-spacing: 3px;
+}
+
+header h1::after {
+  content: "—  ◆  —";
+  display: block;
+  font-size: 14px;
+  letter-spacing: 6px;
+  color: #b08a3e;
+  text-shadow: none;
+  margin-top: 4px;
+}
+
+header p {
+  font-style: italic;
+}
+
+/* a bandeja de caixinhas fica sempre visível embaixo da tela (computador e celular) */
+#bandeja {
+  position: sticky;
+  bottom: 8px;
+  z-index: 20;
+  box-shadow: 0 -6px 14px rgba(27, 26, 31, 0.18);
+}
+
+/* moldura fina dourada por dentro dos cartões */
+.alvo,
+#pergunta-caixa,
+#detalhes,
+.cartao {
+  outline: 1px solid #b08a3e;
+  outline-offset: -8px;
+}
+
+#opcoes button,
+#abas button,
+#botoes button,
+#botoes-arrastar button,
+.caixinha {
+  font-family: Georgia, "Times New Roman", serif;
 }
