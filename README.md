@@ -2,7 +2,7 @@
 
 Jogo de estudo de **Arquitetura Computacional** feito com HTML, CSS e JavaScript puros. A Fia, uma aranhinha 3D, precisa tecer a teia: cada termo que você acerta acende um fio.
 
-**Jogue aqui:** https://SEU-USUARIO.github.io/arqcomp-cruzadinha/
+**Jogue aqui:** https://kevinz138.github.io/Jogo---Arq.-Comp/
 
 ## Como jogar
 
