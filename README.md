@@ -2,7 +2,7 @@
 
 ARQCOMP – Exercício 04 (Sprint 3) · jogo de estudo de Arquitetura Computacional, feito só com HTML, CSS e JavaScript puros (sem bibliotecas).
 
-🔗 **Jogue aqui:** https://SEU-USUARIO.github.io/arqcomp-cruzadinha/
+🔗 **Jogue aqui:** https://kevinz138.github.io/Jogo---Arq.-Comp/
 
 ## Como jogar
 1. Clique em **Jogar na Arena** e escolha o modo (**Aprendiz**: não perde vida · **Guardiã**: 3 chamas por onda).
@@ -33,4 +33,4 @@ ARQCOMP – Exercício 04 (Sprint 3) · jogo de estudo de Arquitetura Computacio
 | 16 | Quad core | Sistemas | Processador com quatro núcleos trabalhando juntos. |
 
 ## Arquivos
-`index.html` · `style.css` · `dados.js` (palavras, pistas, dicas) · `arena.js` (jogo) · `cenario.js`, `personagens.js`, `efeitos.js` (arte e animações em canvas) · `som.js` (áudio sintetizado) · `telas.js`, `grimorio.js`, `selo.js`, `script.js`.
+`index.html` · `style.css` · `dados.js` (palavras, pistas, dicas) · `arena.js` (jogo) · `cenario.js`, `personagens.js`, `efeitos.js` (arte e animações em canvas) · `som.js` (áudio sintetizado)
