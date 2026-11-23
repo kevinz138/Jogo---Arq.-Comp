@@ -41,7 +41,10 @@ function irParaTela(nome, retorno) {
     Selo.abrir();
   } else if (nome == "arena") {
     Arena.layout();
+  } else if (nome == "portas") {
+    Portas.abrir();
   }
+  if (nome != "portas") { Portas.fechar(); }
   somTocar("abrir");
 }
 
@@ -135,6 +138,8 @@ document.addEventListener("keydown", function (ev) {
     Arena.tecla(ev);
   } else if (telaAtual == "selo") {
     Selo.tecla(ev);
+  } else if (telaAtual == "portas") {
+    Portas.tecla(ev);
   } else if (ev.key == "Escape") {
     // fecha janelas abertas
     var abertos = document.querySelectorAll(".modal.aberto");
@@ -167,6 +172,9 @@ function iniciarJogo() {
   $("btn-jogar").onclick = function () { somTocar("abrir"); UI.abrir("modal-modo"); };
   $("btn-grimorio").onclick = function () { irParaTela("grimorio"); };
   $("btn-selo").onclick = function () { irParaTela("selo"); };
+  $("btn-portas").onclick = function () { irParaTela("portas"); };
+  $("portas-voltar").onclick = function () { irParaTela("titulo"); };
+  Portas.ligar();
   $("btn-como").onclick = function () { somTocar("abrir"); UI.abrir("modal-como"); };
   $("btn-zerar").onclick = function () {
     somTocar("clique");

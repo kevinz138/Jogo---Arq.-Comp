@@ -31,6 +31,9 @@
       <button class="btn btn-grande" id="btn-selo">
         <i data-icone="runa"></i><span><b>Selo Rúnico</b><small>A cruzadinha com cristais</small></span>
       </button>
+      <button class="btn btn-grande" id="btn-portas">
+        <i data-icone="chip"></i><span><b>Laboratório Lógico</b><small>Aprenda AND, OR, NOT, XOR... com fases</small></span>
+      </button>
       <div class="menu-linha">
         <button class="btn btn-pequeno" id="btn-como">Como jogar</button>
         <button class="btn btn-pequeno" id="btn-zerar">Zerar progresso</button>
@@ -100,6 +103,62 @@
   </section>
 
   <!-- ===================== SELO RÚNICO (CRUZADINHA) ===================== -->
+  <section id="tela-portas" class="tela">
+    <header class="tela-topo">
+      <button class="btn btn-pequeno" id="portas-voltar"><i data-icone="voltar"></i> Menu</button>
+      <h2>Laboratório Lógico</h2>
+      <span class="topo-info" id="portas-info">★ 0 de 9</span>
+    </header>
+    <div class="pt-abas">
+      <button class="pt-aba ativa" id="pt-aba-aprender">Aprender</button>
+      <button class="pt-aba" id="pt-aba-fases">Fases</button>
+    </div>
+
+    <div id="pt-aprender" class="pt-painel">
+      <p class="tela-dica">Toque nas chaves A e B para ligar (1) e desligar (0). A lâmpada S mostra a saída da porta.</p>
+      <div id="pt-guia" class="pt-guia"></div>
+    </div>
+
+    <div id="pt-fases" class="pt-painel oculto">
+      <p class="tela-dica">Cada vez as fases são sorteadas de novo. Errou? Você ganha dicas, nunca a resposta.</p>
+      <div id="pt-niveis" class="pt-niveis"></div>
+
+      <div id="pt-jogo" class="pt-jogo oculto">
+        <div class="pt-barra">
+          <button class="btn btn-pequeno" id="pt-sair">Trocar nível</button>
+          <b id="pt-titulo-fase">Fácil · Fase 1 de 6</b>
+        </div>
+        <div class="pt-progresso" id="pt-progresso"></div>
+        <p class="pt-pergunta" id="pt-pergunta"></p>
+        <div class="pt-palco">
+          <div id="pt-circuito" class="pt-circuito"></div>
+          <div id="pt-tabela" class="pt-tabela oculto"></div>
+        </div>
+        <div id="pt-opcoes" class="pt-opcoes"></div>
+        <div class="pt-rodape">
+          <div class="pt-lumia"><canvas id="pt-lumia" width="120" height="140"></canvas><div id="pt-fala" class="pt-fala"></div></div>
+          <div class="pt-lado">
+            <div id="pt-dicabox" class="pt-dicabox oculto"></div>
+            <div class="pt-acoes">
+              <button class="btn btn-pequeno" id="pt-dica"><i data-icone="dica"></i> Dica</button>
+              <button class="btn btn-ouro oculto" id="pt-proxima">Próxima fase</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pt-resumo" class="pt-resumo painel oculto">
+        <h3 id="pt-resumo-titulo"></h3>
+        <div id="pt-resumo-estrelas" class="estrelas"></div>
+        <p id="pt-resumo-texto"></p>
+        <div class="menu-linha">
+          <button class="btn btn-ouro" id="pt-resumo-repetir">Jogar de novo</button>
+          <button class="btn" id="pt-resumo-niveis">Escolher nível</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="tela-selo" class="tela">
     <header class="tela-topo">
       <button class="btn btn-pequeno" id="selo-voltar"><i data-icone="voltar"></i> Menu</button>
@@ -286,6 +345,7 @@
   <script src="arena.js"></script>
   <script src="grimorio.js"></script>
   <script src="selo.js"></script>
+  <script src="portas.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
