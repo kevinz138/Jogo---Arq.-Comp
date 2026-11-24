@@ -31,6 +31,9 @@
       <button class="btn btn-grande" id="btn-selo">
         <i data-icone="runa"></i><span><b>Selo Rúnico</b><small>A cruzadinha com cristais</small></span>
       </button>
+      <button class="btn btn-grande" id="btn-memoria">
+        <i data-icone="cartas"></i><span><b>Par Perfeito</b><small>Jogo da memória: ache os pares</small></span>
+      </button>
       <button class="btn btn-grande" id="btn-portas">
         <i data-icone="chip"></i><span><b>Laboratório Lógico</b><small>Aprenda AND, OR, NOT, XOR... com fases</small></span>
       </button>
@@ -103,6 +106,46 @@
   </section>
 
   <!-- ===================== SELO RÚNICO (CRUZADINHA) ===================== -->
+  <section id="tela-memoria" class="tela">
+    <header class="tela-topo">
+      <button class="btn btn-pequeno" id="memoria-voltar"><i data-icone="voltar"></i> Menu</button>
+      <h2>Par Perfeito</h2>
+      <span class="topo-info" id="mem-info">★ 0 de 18</span>
+    </header>
+    <div class="pt-painel">
+      <div id="mem-setup" class="mem-setup">
+        <p class="tela-dica">Vire duas cartas por vez e ache os pares. Os pares são sorteados a cada partida.</p>
+        <div class="pt-abas">
+          <button class="pt-aba ativa" id="mem-modo-c">Conceitos</button>
+          <button class="pt-aba" id="mem-modo-p">Portas lógicas</button>
+        </div>
+        <div id="mem-niveis" class="pt-niveis"></div>
+      </div>
+
+      <div id="mem-jogo" class="mem-jogo oculto">
+        <div class="mem-barra">
+          <button class="btn btn-pequeno" id="mem-sair">Trocar nível</button>
+          <span class="mem-stat">Jogadas <b id="mem-jogadas">0</b></span>
+          <span class="mem-stat">Pares <b id="mem-pares">0 / 0</b></span>
+          <span class="mem-stat">Tempo <b id="mem-tempo">0:00</b></span>
+          <button class="btn btn-pequeno" id="mem-espiar"><i data-icone="dica"></i> Espiar</button>
+        </div>
+        <div id="mem-grade" class="mem-grade"></div>
+      </div>
+
+      <div id="mem-resumo" class="pt-resumo painel oculto">
+        <h3>Todos os pares!</h3>
+        <div id="mem-resumo-estrelas" class="estrelas"></div>
+        <p id="mem-resumo-texto"></p>
+        <ul id="mem-resumo-lista" class="mem-lista"></ul>
+        <div class="menu-linha">
+          <button class="btn btn-ouro" id="mem-resumo-repetir">Jogar de novo</button>
+          <button class="btn" id="mem-resumo-niveis">Escolher nível</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="tela-portas" class="tela">
     <header class="tela-topo">
       <button class="btn btn-pequeno" id="portas-voltar"><i data-icone="voltar"></i> Menu</button>
@@ -130,7 +173,7 @@
         </div>
         <div class="pt-progresso" id="pt-progresso"></div>
         <p class="pt-pergunta" id="pt-pergunta"></p>
-        <div class="pt-palco">
+        <div class="pt-palco" id="pt-palco">
           <div id="pt-circuito" class="pt-circuito"></div>
           <div id="pt-tabela" class="pt-tabela oculto"></div>
         </div>
@@ -175,6 +218,7 @@
           <button class="btn btn-ouro" id="selo-conferir">Conferir</button>
           <button class="btn" id="selo-letra"><i data-icone="cristal"></i> Revelar letra · 5</button>
           <button class="btn" id="selo-reiniciar">Reiniciar</button>
+          <button class="btn" id="selo-novo">Novo tabuleiro</button>
           <span class="topo-info"><i data-icone="cristal"></i> <b id="selo-cristais">0</b></span>
         </div>
       </div>
@@ -346,6 +390,7 @@
   <script src="grimorio.js"></script>
   <script src="selo.js"></script>
   <script src="portas.js"></script>
+  <script src="memoria.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

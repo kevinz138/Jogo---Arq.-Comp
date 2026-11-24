@@ -125,7 +125,8 @@ var Arena = (function () {
   // ---------- perguntas (sorteadas, não dá para decorar) ----------
   function montarPergunta(idx) {
     var p = palavras[idx];
-    var tipo = Math.random() < 0.55 ? "pista" : "descricao";
+    var sorte = Math.random();
+    var tipo = sorte < 0.4 ? "pista" : (sorte < 0.7 ? "descricao" : "rotulo");
     var nDist = A.nOpc - 1;
 
     // distratores: primeiro da mesma categoria (mais difícil e mais didático), depois de outras
@@ -148,6 +149,10 @@ var Arena = (function () {
       q.rotulo = "Pista";
       q.texto = p.pistas[aleatorio(p.pistas.length)];
       q.ajuda = "Qual bug carrega o nome certo?";
+    } else if (tipo == "rotulo") {
+      q.rotulo = "Quem sou eu?";
+      q.texto = "\u201C" + (rotulos[p.resposta] || p.curto) + "\u201D";
+      q.ajuda = "Qual bug carrega o nome desse conceito?";
     } else {
       q.rotulo = "Descrição";
       q.texto = "Qual descrição combina com " + p.nome + "?";
@@ -158,7 +163,7 @@ var Arena = (function () {
 
   function textoDaOpcao(q, i) {
     var p = palavras[i];
-    return q.tipo == "pista" ? p.curto : (rotulos[p.resposta] || p.curto);
+    return q.tipo == "descricao" ? (rotulos[p.resposta] || p.curto) : p.curto;
   }
 
   // ---------- fluxo do jogo ----------

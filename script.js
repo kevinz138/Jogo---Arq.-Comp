@@ -43,8 +43,11 @@ function irParaTela(nome, retorno) {
     Arena.layout();
   } else if (nome == "portas") {
     Portas.abrir();
+  } else if (nome == "memoria") {
+    Memoria.abrir();
   }
   if (nome != "portas") { Portas.fechar(); }
+  if (nome != "memoria") { Memoria.fechar(); }
   somTocar("abrir");
 }
 
@@ -174,6 +177,9 @@ function iniciarJogo() {
   $("btn-selo").onclick = function () { irParaTela("selo"); };
   $("btn-portas").onclick = function () { irParaTela("portas"); };
   $("portas-voltar").onclick = function () { irParaTela("titulo"); };
+  $("btn-memoria").onclick = function () { irParaTela("memoria"); };
+  $("memoria-voltar").onclick = function () { irParaTela("titulo"); };
+  Memoria.ligar();
   Portas.ligar();
   $("btn-como").onclick = function () { somTocar("abrir"); UI.abrir("modal-como"); };
   $("btn-zerar").onclick = function () {

@@ -15,6 +15,7 @@ var iconesSvg = {
   som: "M3 9v6h4l5 4V5L7 9zM15 8.5a5 5 0 0 1 0 7l-1-1.2a3.4 3.4 0 0 0 0-4.6zM17.5 6a8.5 8.5 0 0 1 0 12l-1-1.2a6.9 6.9 0 0 0 0-9.6z",
   mudo: "M3 9v6h4l5 4V5L7 9zM15 9l1.2-1.2 2.3 2.3 2.3-2.3L22 9l-2.3 2.3 2.3 2.3-1.2 1.2-2.3-2.3-2.3 2.3L15 13.6l2.3-2.3z",
   voltar: "M15 4l-8 8 8 8 1.5-1.5L10 12l6.5-6.5z",
+  cartas: "M3 7h11v14H3zM8 3h13v15h-2V5H8z",
   chip: "M7 7h10v10H7zM9.5 9.5v5h5v-5zM9 2h2v3H9zM13 2h2v3h-2zM9 19h2v3H9zM13 19h2v3h-2zM2 9h3v2H2zM2 13h3v2H2zM19 9h3v2h-3zM19 13h3v2h-3z",
   chama: "M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-4 3-6 .5 1.5 1.5 2 2 2 0-3-1-5 1-8z"
 };
@@ -41,7 +42,7 @@ function $(id) {
 // ---------- Perfil (salvo no navegador) ----------
 var Perfil = (function () {
   var chave = "lumia-abismo-v1";
-  var d = { xp: 0, cristais: 0, estudados: [], tutorial: false, mudo: false, seloPremio: false, portas: {} };
+  var d = { xp: 0, cristais: 0, estudados: [], tutorial: false, mudo: false, seloPremio: false, portas: {}, memoria: {} };
 
   function carregar() {
     try {
@@ -100,7 +101,7 @@ var Perfil = (function () {
   }
 
   function zerar() {
-    d.xp = 0; d.cristais = 0; d.estudados = []; d.tutorial = false; d.seloPremio = false; d.portas = {};
+    d.xp = 0; d.cristais = 0; d.estudados = []; d.tutorial = false; d.seloPremio = false; d.portas = {}; d.memoria = {};
     salvar();
   }
 
@@ -142,7 +143,7 @@ var UI = (function () {
 
   // telas inteiras: titulo, grimorio, selo (a Arena usa o HUD por cima do canvas)
   function tela(nome) {
-    var telas = ["titulo", "grimorio", "selo", "portas"];
+    var telas = ["titulo", "grimorio", "selo", "portas", "memoria"];
     for (var i = 0; i < telas.length; i++) {
       $("tela-" + telas[i]).classList.toggle("ativa", telas[i] == nome);
     }

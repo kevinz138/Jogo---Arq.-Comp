@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 40" width="900" height="40">
+<rect width="900" height="40" fill="none"/>
+<path d="M0 20 H300 L320 8 H580 L600 20 H900" fill="none" stroke="#7a3a8c" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+<path d="M0 20 H300 L320 8 H580 L600 20 H900" fill="none" stroke="#ffd27a" stroke-width="3" stroke-linecap="round" stroke-dasharray="14 40"><animate attributeName="stroke-dashoffset" from="108" to="0" dur="2.4s" repeatCount="indefinite"/></path>
+<g fill="#9af4ff"><path d="M450 4 l7 10 -7 22 -7 -22z"><animate attributeName="opacity" values="1;.35;1" dur="2s" repeatCount="indefinite"/></path></g>
+<circle cx="320" cy="8" r="4" fill="#ff8aa8"><animate attributeName="r" values="3;6;3" dur="1.6s" repeatCount="indefinite"/></circle>
+<circle cx="580" cy="8" r="4" fill="#ff8aa8"><animate attributeName="r" values="6;3;6" dur="1.6s" repeatCount="indefinite"/></circle>
+</svg>

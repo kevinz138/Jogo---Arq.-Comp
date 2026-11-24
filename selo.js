@@ -17,6 +17,109 @@ var Selo = (function () {
     return r + "," + c;
   }
 
+  // ---------- gerador de cruzadinhas: cada tabuleiro é diferente ----------
+  var tabuleiroFixo = tabuleiro; // plano B, caso o sorteio não consiga encaixar tudo
+
+  function sortear(n) { return Math.floor(Math.random() * n); }
+
+  function podeColocar(grade, w, r0, c0, d) {
+    var dr = d == "V" ? 1 : 0, dc = d == "H" ? 1 : 0;
+    var antes = grade[(r0 - dr) + "," + (c0 - dc)];
+    var depois = grade[(r0 + dr * w.length) + "," + (c0 + dc * w.length)];
+    if (antes || depois) { return -1; }
+    var cruz = 0;
+    for (var k = 0; k < w.length; k++) {
+      var r = r0 + dr * k, c = c0 + dc * k;
+      var g = grade[r + "," + c];
+      if (g) {
+        if (g.ch != w.charAt(k) || g.dirs[d]) { return -1; }
+        cruz++;
+      } else if (grade[(r + dc) + "," + (c + dr)] || grade[(r - dc) + "," + (c - dr)]) {
+        return -1;
+      }
+    }
+    return cruz;
+  }
+
+  function colocar(grade, w, r0, c0, d) {
+    for (var k = 0; k < w.length; k++) {
+      var key = (r0 + (d == "V" ? k : 0)) + "," + (c0 + (d == "H" ? k : 0));
+      if (!grade[key]) { grade[key] = { ch: w.charAt(k), dirs: {} }; }
+      grade[key].dirs[d] = true;
+    }
+  }
+
+  function tamanhoDaGrade(grade) {
+    var r0 = 1e9, r1 = -1e9, c0 = 1e9, c1 = -1e9;
+    for (var k in grade) {
+      var p = k.split(",");
+      var r = +p[0], c = +p[1];
+      r0 = Math.min(r0, r); r1 = Math.max(r1, r); c0 = Math.min(c0, c); c1 = Math.max(c1, c);
+    }
+    return { r0: r0, c0: c0, lin: r1 - r0 + 1, col: c1 - c0 + 1 };
+  }
+
+  function tentarCruzadinha(textos) {
+    var ordem = textos.map(function (t) { return { t: t, k: t.length + Math.random() * 5 }; })
+      .sort(function (a, b) { return b.k - a.k; }).map(function (o) { return o.t; });
+    var grade = {}, postas = [];
+    var d0 = Math.random() < 0.5 ? "H" : "V";
+    colocar(grade, ordem[0], 0, 0, d0);
+    postas.push({ p: ordem[0], r: 0, c: 0, d: d0 });
+    for (var i = 1; i < ordem.length; i++) {
+      var w = ordem[i];
+      var melhor = null, melhorNota = 1e9;
+      for (var d = 0; d < 2; d++) {
+        var dir = d == 0 ? "H" : "V";
+        for (var key in grade) {
+          var pos = key.split(",");
+          for (var k = 0; k < w.length; k++) {
+            if (grade[key].ch != w.charAt(k)) { continue; }
+            var r0 = +pos[0] - (dir == "V" ? k : 0);
+            var c0 = +pos[1] - (dir == "H" ? k : 0);
+            var cruz = podeColocar(grade, w, r0, c0, dir);
+            if (cruz < 1) { continue; }
+            colocar(grade, w, r0, c0, dir);
+            var t = tamanhoDaGrade(grade);
+            // desfaz: refaz a grade sem essa palavra
+            var nota = Math.max(t.lin, t.col) * 3 + t.lin * t.col / 20 - cruz * 2 + Math.random() * 6;
+            for (var u = 0; u < w.length; u++) {
+              var kk = (r0 + (dir == "V" ? u : 0)) + "," + (c0 + (dir == "H" ? u : 0));
+              delete grade[kk].dirs[dir];
+              if (!grade[kk].dirs.H && !grade[kk].dirs.V) { delete grade[kk]; }
+            }
+            if (nota < melhorNota) { melhorNota = nota; melhor = { p: w, r: r0, c: c0, d: dir }; }
+          }
+        }
+      }
+      if (!melhor) { return null; }
+      colocar(grade, melhor.p, melhor.r, melhor.c, melhor.d);
+      postas.push(melhor);
+    }
+    var tam = tamanhoDaGrade(grade);
+    if (tam.lin > 18 || tam.col > 18) { return null; }
+    for (var j = 0; j < postas.length; j++) { postas[j].r -= tam.r0; postas[j].c -= tam.c0; }
+    return { linhas: tam.lin, colunas: tam.col, palavras: postas, area: tam.lin * tam.col };
+  }
+
+  function gerarTabuleiro() {
+    var textos = tabuleiroFixo.palavras.map(function (w) { return w.p; });
+    var melhor = null;
+    for (var t = 0; t < 150; t++) {
+      var r = tentarCruzadinha(textos);
+      if (r && (!melhor || r.area < melhor.area)) { melhor = r; }
+      if (melhor && t >= 12) { break; }
+    }
+    return melhor || tabuleiroFixo;
+  }
+
+  function semProgresso() {
+    for (var k in cel) {
+      if (cel[k].user || cel[k].dada) { return false; }
+    }
+    return true;
+  }
+
   function montarDados() {
     cel = {};
     lista = [];
@@ -69,7 +172,7 @@ var Selo = (function () {
     var tam = porLargura;
     if (window.innerWidth > 760) {
       // em telas largas a grade fica ao lado das pistas: limita também pela altura
-      var porAltura = Math.floor((window.innerHeight - 190 - 3 * (tabuleiro.linhas - 1)) / tabuleiro.linhas);
+      var porAltura = Math.floor((window.innerHeight - 250 - 3 * (tabuleiro.linhas - 1)) / tabuleiro.linhas);
       tam = Math.min(tam, porAltura);
     }
     return Math.max(22, Math.min(44, tam));
@@ -406,8 +509,20 @@ var Selo = (function () {
     }
   }
 
+  function novoTabuleiro() {
+    tabuleiro = gerarTabuleiro();
+    sel = null;
+    montarDados();
+    montarListas();
+    montarGrade();
+    atualizar();
+  }
+
   function abrir() {
-    if (!montado) {
+    // cada vez que você chega com o tabuleiro vazio, ele é sorteado de novo
+    if (!montado || semProgresso()) {
+      tabuleiro = gerarTabuleiro();
+      sel = null;
       montarDados();
       montarListas();
       montado = true;
@@ -423,6 +538,11 @@ var Selo = (function () {
     $("selo-reiniciar").onclick = function () {
       somTocar("clique");
       UI.confirmar("Limpar o tabuleiro?", "Todas as letras serão apagadas.", reiniciar);
+    };
+    $("selo-novo").onclick = function () {
+      somTocar("clique");
+      if (semProgresso()) { novoTabuleiro(); return; }
+      UI.confirmar("Sortear outro tabuleiro?", "As letras do tabuleiro atual serão perdidas.", novoTabuleiro);
     };
     $("selo-aba-h").onclick = function () { aba("h"); };
     $("selo-aba-v").onclick = function () { aba("v"); };

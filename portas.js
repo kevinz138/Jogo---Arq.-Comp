@@ -73,13 +73,71 @@ var Portas = (function () {
   };
 
   var NIVEIS = {
-    facil: { nome: "Fácil", cor: "#7cf0c4", total: 6, desc: "Uma porta só. Ache a saída e reconheça AND, OR e NOT.",
-             tipos: ["saida", "saida", "saida", "id", "id", "id"] },
-    medio: { nome: "Médio", cor: "#ffd27a", total: 6, desc: "Circuitos com 2 ou 3 portas, mais NAND e NOR, e chaves para ligar.",
-             tipos: ["saida", "saida", "id", "id", "ligar", "ligar"] },
-    dificil: { nome: "Difícil", cor: "#ff8aa8", total: 6, desc: "Circuitos maiores com XOR e XNOR e portas escondidas para descobrir.",
-               tipos: ["saida", "saida", "ligar", "ligar", "faltando", "faltando"] }
+    facil: { nome: "Fácil", cor: "#7cf0c4", total: 10, desc: "Uma porta por vez: ache a saída, reconheça AND, OR e NOT e responda perguntas básicas.",
+             tipos: ["saida", "id", "expr", "qual", "teoria", "teoria"] },
+    medio: { nome: "Médio", cor: "#ffd27a", total: 10, desc: "Circuitos com 2 ou 3 portas, NAND e NOR, contagem de linhas e chaves para ligar.",
+             tipos: ["saida", "id", "expr", "qual", "ligar", "contar", "teoria", "ligar"] },
+    dificil: { nome: "Difícil", cor: "#ff8aa8", total: 10, desc: "Circuitos maiores com XOR e XNOR, portas escondidas, truques de lógica e somador.",
+               tipos: ["saida", "ligar", "faltando", "contar", "expr", "qual", "teoria", "faltando", "ligar"] }
   };
+
+  // banco de perguntas de teoria (as erradas são sorteadas a cada vez)
+  var TEORIA = [
+    { n: "facil", p: "Qual porta lógica inverte o valor da entrada?", c: "NOT (NÃO)", e: ["AND (E)", "OR (OU)", "XOR", "NAND"],
+      d: ["Ela tem uma única entrada.", "Também é chamada de inversora."], x: "A NOT troca 0 por 1 e 1 por 0." },
+    { n: "facil", p: "Quantas entradas tem a porta NOT?", c: "Uma", e: ["Duas", "Três", "Nenhuma"],
+      d: ["Pense em quantos valores ela inverte.", "A NOT inverte um único sinal."], x: "A NOT tem uma entrada e uma saída." },
+    { n: "facil", p: "A porta AND só dá saída 1 quando...", c: "todas as entradas valem 1", e: ["pelo menos uma entrada vale 1", "as entradas são diferentes", "todas as entradas valem 0"],
+      d: ["AND é o 'E' em português: uma coisa E a outra.", "Basta uma entrada valer 0 para a saída ser 0."], x: "AND = E: precisa de tudo ligado ao mesmo tempo." },
+    { n: "facil", p: "A porta OR só dá saída 0 quando...", c: "todas as entradas valem 0", e: ["todas as entradas valem 1", "as entradas são diferentes", "uma entrada vale 1"],
+      d: ["OR é o 'OU': uma coisa OU a outra.", "Basta uma entrada valer 1 para a saída ser 1."], x: "OR só fica em 0 quando ninguém está ligado." },
+    { n: "facil", p: "O que mostra uma tabela-verdade?", c: "a saída para todas as combinações de entradas", e: ["a velocidade da porta", "quanta energia o chip gasta", "o preço do circuito"],
+      d: ["Ela lista cada combinação possível de entradas.", "Em cada linha aparece o resultado S."], x: "A tabela-verdade lista todas as entradas possíveis e a saída de cada uma." },
+    { n: "facil", p: "Quantas linhas tem a tabela-verdade de uma porta com 2 entradas?", c: "4", e: ["2", "3", "8", "6"],
+      d: ["Cada entrada pode ser 0 ou 1.", "São 2 x 2 combinações."], x: "Com n entradas existem 2^n linhas: 2 entradas dão 4 linhas." },
+    { n: "facil", p: "No circuito, o que representa o valor 1?", c: "sinal ligado", e: ["sinal desligado", "um fio cortado", "um erro do circuito"],
+      d: ["Nos desenhos, os fios que brilham valem 1.", "Pense em um interruptor ligado."], x: "1 = ligado (tensão alta) e 0 = desligado (tensão baixa)." },
+    { n: "facil", p: "A porta OR é a porta do...", c: "OU", e: ["E", "NÃO", "OU exclusivo"],
+      d: ["Em português, OR significa 'ou'.", "Basta uma entrada ligada."], x: "OR = OU: dá 1 se pelo menos uma entrada for 1." },
+    { n: "medio", p: "A porta NAND é a combinação de quais portas?", c: "AND seguida de NOT", e: ["OR seguida de NOT", "XOR seguida de NOT", "NOT seguida de OR"],
+      d: ["O 'N' no começo quer dizer 'negado'.", "Ela é uma porta conhecida com a saída invertida."], x: "NAND = NOT AND: um AND com a saída invertida." },
+    { n: "medio", p: "Qual porta dá saída 1 somente quando todas as entradas valem 0?", c: "NOR", e: ["OR", "NAND", "XNOR", "AND"],
+      d: ["Ela é uma porta com saída negada.", "É o contrário de um OR."], x: "NOR = NOT OR: só vale 1 quando nenhuma entrada está ligada." },
+    { n: "medio", p: "Qual porta dá saída 0 somente quando todas as entradas valem 1?", c: "NAND", e: ["AND", "NOR", "XOR", "OR"],
+      d: ["Ela é uma porta com saída negada.", "É o contrário de um AND."], x: "NAND = NOT AND: só vale 0 quando todas as entradas são 1." },
+    { n: "medio", p: "A porta XOR dá saída 1 quando as entradas são...", c: "diferentes", e: ["iguais", "ambas 1", "ambas 0"],
+      d: ["XOR é o 'OU exclusivo'.", "Uma e somente uma entrada pode estar ligada."], x: "XOR dá 1 quando as entradas são diferentes entre si." },
+    { n: "medio", p: "A porta XNOR dá saída 1 quando as entradas são...", c: "iguais", e: ["diferentes", "somente ambas 1", "somente ambas 0"],
+      d: ["XNOR é um XOR negado.", "Ela funciona como um detector de empate."], x: "XNOR dá 1 quando as entradas são iguais (0 e 0, ou 1 e 1)." },
+    { n: "medio", p: "Quantas linhas tem a tabela-verdade de um circuito com 3 chaves?", c: "8", e: ["3", "6", "9", "4"],
+      d: ["Cada chave dobra o número de combinações.", "2 x 2 x 2."], x: "Com 3 entradas existem 2^3 = 8 combinações." },
+    { n: "medio", p: "O que significa a bolinha na saída de uma porta, como na NAND?", c: "a saída é negada", e: ["a porta tem duas saídas", "a porta está desligada", "a entrada é negada"],
+      d: ["A bolinha está desenhada depois do corpo da porta.", "Ela faz o mesmo papel de uma NOT."], x: "A bolinha é uma inversão: ela nega a saída da porta." },
+    { n: "medio", p: "Qual porta dá o contrário de um OR?", c: "NOR", e: ["AND", "XOR", "NAND"],
+      d: ["Procure a porta com 'N' na frente.", "É um OR com saída negada."], x: "NOR é um OR com a saída negada." },
+    { n: "medio", p: "Qual porta dá o contrário de um XOR?", c: "XNOR", e: ["NAND", "NOR", "OR"],
+      d: ["Procure a porta com 'N' na frente do XOR.", "Ela dá 1 quando as entradas são iguais."], x: "XNOR é o XOR negado." },
+    { n: "medio", p: "No somador de 1 bit, qual porta calcula o bit de soma de A + B?", c: "XOR", e: ["AND", "NOR", "NOT"],
+      d: ["1 + 1 = 0 e 'vai um'; 1 + 0 = 1.", "A soma dá 1 quando os bits são diferentes."], x: "A soma de 1 bit é A XOR B." },
+    { n: "medio", p: "No somador de 1 bit, qual porta gera o 'vai um' (carry)?", c: "AND", e: ["XOR", "OR", "NOT"],
+      d: ["O 'vai um' só acontece em 1 + 1.", "É preciso que as duas entradas valham 1."], x: "O 'vai um' é A AND B." },
+    { n: "dificil", p: "Ligando as duas entradas de uma NAND no mesmo sinal A, ela passa a se comportar como...", c: "NOT", e: ["AND", "OR", "XOR"],
+      d: ["Teste A = 0: NAND(0, 0) vale?", "Teste A = 1: NAND(1, 1) vale?"], x: "NAND(A, A) = NOT A. Por isso a NAND é chamada de porta universal." },
+    { n: "dificil", p: "Ligando as duas entradas de uma XOR no mesmo sinal A, a saída vale sempre...", c: "0", e: ["1", "A", "NOT A"],
+      d: ["As duas entradas ficam sempre iguais.", "XOR só dá 1 quando as entradas são diferentes."], x: "XOR(A, A) = 0, pois as entradas nunca são diferentes." },
+    { n: "dificil", p: "Ligando as duas entradas de uma XNOR no mesmo sinal A, a saída vale sempre...", c: "1", e: ["0", "A", "NOT A"],
+      d: ["As duas entradas ficam sempre iguais.", "XNOR dá 1 quando as entradas são iguais."], x: "XNOR(A, A) = 1, pois as entradas sempre são iguais." },
+    { n: "dificil", p: "Por que NAND e NOR são chamadas de portas universais?", c: "só com um desses tipos dá para montar qualquer outra porta", e: ["porque funcionam em qualquer tensão", "porque têm sempre três entradas", "porque são as mais baratas"],
+      d: ["Pense em construir NOT, AND e OR usando só uma delas.", "A palavra 'universal' vem da capacidade de formar todas as outras."], x: "Com apenas NAND (ou só NOR) é possível construir NOT, AND, OR e todas as outras." },
+    { n: "dificil", p: "Qual a saída de A OR (NOT A)?", c: "sempre 1", e: ["sempre 0", "igual a A", "igual a NOT A"],
+      d: ["Teste A = 0 e depois A = 1.", "Sempre sobra uma das duas entradas valendo 1."], x: "Uma das entradas (A ou NOT A) sempre vale 1, então o OR dá 1." },
+    { n: "dificil", p: "Qual a saída de A AND (NOT A)?", c: "sempre 0", e: ["sempre 1", "igual a A", "igual a NOT A"],
+      d: ["Teste A = 0 e depois A = 1.", "As duas entradas nunca valem 1 juntas."], x: "A e NOT A nunca valem 1 ao mesmo tempo, então o AND dá 0." },
+    { n: "dificil", p: "Para que servem as portas lógicas dentro de um computador?", c: "formam circuitos como a ULA, os registradores e a memória", e: ["só para exibir imagens", "só para conectar à internet", "só para guardar arquivos no HD"],
+      d: ["A ULA da CPU faz contas e lógica.", "Todos os circuitos digitais são feitos de portas."], x: "A ULA, os registradores e as memórias são feitos de milhões de portas lógicas." },
+    { n: "dificil", p: "Qual a saída de A XOR 1?", c: "NOT A", e: ["A", "sempre 0", "sempre 1"],
+      d: ["Teste A = 0: 0 XOR 1 vale?", "Teste A = 1: 1 XOR 1 vale?"], x: "XOR com 1 inverte o outro sinal: A XOR 1 = NOT A." }
+  ];
 
   var falas = {
     acerto: ["Isso aí! A luz passou!", "Circuito perfeito!", "Você pensa como uma porta lógica!", "Boa! Próxima!"],
@@ -132,7 +190,7 @@ var Portas = (function () {
       var folhas = [], portas = [];
       coletar(raiz, folhas, portas);
       if (folhas.length > maxFolhas || folhas.length < (nPortas == 1 ? 1 : 2) || profundidade(raiz) > 3) { continue; }
-      var letras = "ABCDE";
+      var letras = escolher(["ABCDE", "PQRST", "XYZWV", "MNKLJ"]);
       for (var i = 0; i < folhas.length; i++) { folhas[i].nome = letras.charAt(i); }
       return { raiz: raiz, folhas: folhas, portas: portas };
     }
@@ -415,13 +473,31 @@ var Portas = (function () {
 
   function iniciarNivel(k) {
     var N = NIVEIS[k];
-    PJ = { nivel: k, fase: 0, total: N.total, tipos: embaralhar(N.tipos), limpas: 0, d: null, resolvido: false, dicaAtual: 0, erros: 0, limpo: true, fim: false };
+    PJ = { nivel: k, fase: 0, total: N.total, tipos: sortearTipos(N), usadas: {}, limpas: 0, d: null, resolvido: false, dicaAtual: 0, erros: 0, limpo: true, fim: false };
     el("pt-niveis").classList.add("oculto");
     el("pt-resumo").classList.add("oculto");
     el("pt-jogo").classList.remove("oculto");
     somTocar("onda");
     falar(falas.inicio, "normal");
     proximaFase();
+  }
+
+  function sortearTipos(N) {
+    var seq = [];
+    var ult = "", ult2 = "";
+    for (var i = 0; i < N.total; i++) {
+      var t;
+      var cont = 0;
+      do { t = escolher(N.tipos); cont++; } while ((t == ult || (t == ult2 && t == ult)) && cont < 20);
+      seq.push(t);
+      ult2 = ult; ult = t;
+    }
+    // garante variedade: todos os tipos do nível aparecem pelo menos uma vez
+    var unicos = N.tipos.filter(function (v, i, a) { return a.indexOf(v) == i; });
+    for (var u = 0; u < unicos.length && u < seq.length; u++) {
+      if (seq.indexOf(unicos[u]) < 0) { seq[sortear(seq.length)] = unicos[u]; }
+    }
+    return seq;
   }
 
   function sairDoNivel() {
@@ -457,7 +533,64 @@ var Portas = (function () {
     if (tipo == "saida") { return gerarSaida(nivel); }
     if (tipo == "id") { return gerarId(nivel); }
     if (tipo == "ligar") { return gerarLigar(nivel); }
+    if (tipo == "expr") { return gerarExpr(nivel); }
+    if (tipo == "contar") { return gerarContar(nivel); }
+    if (tipo == "qual") { return gerarQual(nivel); }
+    if (tipo == "teoria") { return gerarTeoria(nivel); }
     return gerarFaltando(nivel);
+  }
+
+  function gerarExpr(nivel) {
+    var d = gerarSaida(nivel);
+    d.tipo = "expr";
+    return d;
+  }
+
+  function gerarContar(nivel) {
+    var nPortas = nivel == "dificil" ? 2 + sortear(2) : 1 + sortear(2);
+    for (var t = 0; t < 100; t++) {
+      var circ = criarCircuito(nPortas, poolDoNivel(nivel), 3);
+      var tab = tabelaDoCircuito(circ);
+      var conta = 0;
+      for (var i = 0; i < tab.saidas.length; i++) { conta += tab.saidas[i]; }
+      if (conta == 0 || conta == tab.saidas.length) { continue; }
+      var total = tab.saidas.length;
+      var cand = [];
+      for (var k = 0; k <= total; k++) { if (k != conta) { cand.push(k); } }
+      var ops = embaralhar([conta].concat(embaralhar(cand).slice(0, 3))).sort(function (a, b) { return a - b; });
+      return { tipo: "contar", circ: circ, tabela: tab, n: conta, total: total, opcoes: ops };
+    }
+    return gerarContar(nivel);
+  }
+
+  function gerarQual(nivel) {
+    var pool = nivel == "facil" ? ["AND", "OR", "NAND", "NOR"] : ["AND", "OR", "NAND", "NOR", "XOR", "XNOR"];
+    for (var t = 0; t < 200; t++) {
+      var a = sortear(2), b = sortear(2), alvo = sortear(2);
+      var certas = pool.filter(function (g) { return PORTAS[g].f(a, b) == alvo; });
+      var erradas = pool.filter(function (g) { return PORTAS[g].f(a, b) != alvo; });
+      var qtd = nivel == "facil" ? 2 : 3;
+      if (certas.length < 1 || erradas.length < qtd) { continue; }
+      // só uma opção certa aparece na tela, as outras ficam de fora ou entram como erradas
+      var certa = escolher(certas);
+      var opcoes = embaralhar([certa].concat(embaralhar(erradas).slice(0, qtd)));
+      return { tipo: "qual", a: a, b: b, alvo: alvo, certa: certa, opcoes: opcoes };
+    }
+    return gerarQual(nivel);
+  }
+
+  function gerarTeoria(nivel) {
+    var ordem = { facil: ["facil"], medio: ["facil", "medio"], dificil: ["medio", "dificil"] }[nivel];
+    var cand = TEORIA.filter(function (q, i) {
+      q.i = i;
+      var peso = q.n == nivel || (nivel == "dificil" && q.n == "dificil");
+      return ordem.indexOf(q.n) >= 0 && !PJ.usadas[i] && (peso || Math.random() < 0.35);
+    });
+    if (!cand.length) { PJ.usadas = {}; cand = TEORIA.filter(function (q) { return ordem.indexOf(q.n) >= 0; }); }
+    var q = escolher(cand);
+    PJ.usadas[q.i] = true;
+    var opcoes = embaralhar([q.c].concat(embaralhar(q.e).slice(0, 3)));
+    return { tipo: "teoria", q: q, certa: q.c, opcoes: opcoes };
   }
 
   function gerarSaida(nivel) {
@@ -543,7 +676,21 @@ var Portas = (function () {
 
   // ---------- textos de dica (nunca entregam a resposta) ----------
   function dicasDe(d) {
-    if (d.tipo == "saida") {
+    if (d.tipo == "contar") {
+      return ["Monte a tabela-verdade: liste todas as combinações das chaves (" + d.total + " linhas).",
+              "Resolva o circuito uma linha de cada vez e conte só as linhas em que a lâmpada acende.",
+              "Vou riscar uma opção que com certeza está errada."];
+    }
+    if (d.tipo == "qual") {
+      var iguais = d.a == d.b;
+      return ["Teste cada porta com as entradas A = " + d.a + " e B = " + d.b + ", usando a regra dela.",
+              iguais ? "As duas entradas são iguais (as duas valem " + d.a + ")." : "As duas entradas são diferentes entre si (uma vale 1 e a outra 0).",
+              "Vou riscar uma opção que com certeza está errada."];
+    }
+    if (d.tipo == "teoria") {
+      return [d.q.d[0], d.q.d[1], "Vou riscar uma opção que com certeza está errada."];
+    }
+    if (d.tipo == "saida" || d.tipo == "expr") {
       var primeira = d.circ.portas[0];
       var a = primeira.filhos[0], b = primeira.filhos[1];
       var ent = primeira.filhos.length == 1 ? "A porta " + primeira.g + " recebe " + a.v + "." :
@@ -572,6 +719,10 @@ var Portas = (function () {
   // ---------- desenho da fase ----------
   function pergunta(d) {
     if (d.tipo == "saida") { return "Qual valor chega na lâmpada S? Os fios que brilham valem 1."; }
+    if (d.tipo == "expr") { return "Calcule a expressão com os valores dados. Quanto vale S?"; }
+    if (d.tipo == "contar") { return "Em quantas das " + d.total + " combinações de chaves a lâmpada S acende (vale 1)?"; }
+    if (d.tipo == "qual") { return "Com A = " + d.a + " e B = " + d.b + ", qual destas portas dá saída S = " + d.alvo + "?"; }
+    if (d.tipo == "teoria") { return d.q.p; }
     if (d.tipo == "id") { return "Esta é a tabela-verdade de uma porta. Qual porta é essa?"; }
     if (d.tipo == "ligar") { return "Ligue e desligue as chaves (toque nelas) para deixar a lâmpada " + (d.meta ? "ACESA (1)" : "APAGADA (0)") + "."; }
     return "Uma porta está escondida no '?'. Qual porta faz a tabela inteira bater?";
@@ -595,8 +746,34 @@ var Portas = (function () {
     var palco = el("pt-circuito"), tab = el("pt-tabela"), op = el("pt-opcoes");
     tab.innerHTML = ""; op.innerHTML = "";
     tab.classList.add("oculto");
+    el("pt-palco").classList.toggle("oculto", d.tipo == "teoria");
 
-    if (d.tipo == "saida") {
+    if (d.tipo == "expr") {
+      calcular(d.circ.raiz, d.vals);
+      var chips = "";
+      for (var ci = 0; ci < d.circ.folhas.length; ci++) {
+        var fo = d.circ.folhas[ci];
+        chips += '<span class="chip ' + (fo.v ? "um" : "zero") + '">' + fo.nome + " = " + fo.v + "</span>";
+      }
+      palco.innerHTML = '<div class="expr-card"><div class="expr-chips">' + chips + '</div><div class="expr-formula">S = ' + expressao(d.circ.raiz, true) + "</div></div>";
+      op.innerHTML = '<button class="btn btn-resp" data-resp="0"><b>0</b><small>apagada</small></button><button class="btn btn-resp" data-resp="1"><b>1</b><small>acesa</small></button>';
+    } else if (d.tipo == "contar") {
+      palco.innerHTML = svgCircuito(d.circ, { valores: false, mostrar: false, nomes: true, lampada: null });
+      for (var ni = 0; ni < d.opcoes.length; ni++) {
+        op.innerHTML += '<button class="btn btn-resp" data-resp="' + d.opcoes[ni] + '"><b>' + d.opcoes[ni] + "</b><small>de " + d.total + "</small></button>";
+      }
+    } else if (d.tipo == "qual") {
+      palco.innerHTML = '<div class="expr-card"><div class="expr-chips"><span class="chip ' + (d.a ? "um" : "zero") + '">A = ' + d.a + '</span><span class="chip ' + (d.b ? "um" : "zero") + '">B = ' + d.b +
+        '</span></div><div class="expr-formula">S precisa valer <b>' + d.alvo + "</b></div></div>";
+      for (var qi = 0; qi < d.opcoes.length; qi++) {
+        var gq = d.opcoes[qi];
+        op.innerHTML += '<button class="btn btn-resp btn-porta" data-resp="' + gq + '">' + svgPortaMini(gq) + "<b>" + gq + "</b><small>" + PORTAS[gq].pt + "</small></button>";
+      }
+    } else if (d.tipo == "teoria") {
+      for (var ti = 0; ti < d.opcoes.length; ti++) {
+        op.innerHTML += '<button class="btn btn-resp btn-texto" data-resp="' + d.opcoes[ti] + '"><span class="tecla-num">' + (ti + 1) + "</span>" + d.opcoes[ti] + "</button>";
+      }
+    } else if (d.tipo == "saida") {
       calcular(d.circ.raiz, d.vals);
       palco.innerHTML = svgCircuito(d.circ, { valores: true, mostrar: false, nomes: true, lampada: null });
       op.innerHTML = '<button class="btn btn-resp" data-resp="0"><b>0</b><small>apagada</small></button><button class="btn btn-resp" data-resp="1"><b>1</b><small>acesa</small></button>';
@@ -613,7 +790,7 @@ var Portas = (function () {
     } else if (d.tipo == "ligar") {
       calcular(d.circ.raiz, d.vals);
       palco.innerHTML = svgCircuito(d.circ, { valores: true, mostrar: true, chave: true, nomes: true });
-    } else {
+    } else if (d.tipo == "faltando") {
       palco.innerHTML = svgCircuito(d.circ, { valores: false, mostrar: false, nomes: true, oculta: d.alvo, lampada: null });
       tab.classList.remove("oculto");
       tab.innerHTML = htmlTabela(d.tabela.nomes, d.tabela.linhas, function (l) {
@@ -633,13 +810,26 @@ var Portas = (function () {
   }
 
   // ---------- respostas ----------
+  function ehBinaria(d) { return d.tipo == "saida" || d.tipo == "expr"; }
+
+  function certaDe(d) {
+    if (d.tipo == "id") { return String(d.gate); }
+    if (d.tipo == "contar") { return String(d.n); }
+    return String(d.certa);
+  }
+
+  function tabelaHtmlDe(tab) {
+    return htmlTabela(tab.nomes, tab.linhas, function (l) {
+      for (var i = 0; i < tab.linhas.length; i++) { if (tab.linhas[i] === l) { return tab.saidas[i]; } }
+    });
+  }
+
   function responder(resp) {
     if (!PJ || PJ.resolvido) { return; }
     var d = PJ.d;
     var certo;
-    if (d.tipo == "saida") { certo = (parseInt(resp, 10) === d.resp); }
-    else if (d.tipo == "id") { certo = (resp == d.gate); }
-    else { certo = (resp == d.certa); }
+    if (ehBinaria(d)) { certo = (parseInt(resp, 10) === d.resp); }
+    else { certo = (String(resp) == certaDe(d)); }
     if (certo) { acertou(resp); } else { errou(resp); }
   }
 
@@ -658,7 +848,7 @@ var Portas = (function () {
     PJ.erros++;
     PJ.limpo = false;
     marcarBotao(resp, "errado");
-    if (PJ.d.tipo != "saida") {
+    if (!ehBinaria(PJ.d)) {
       var b = el("pt-opcoes").querySelector('[data-resp="' + resp + '"]');
       if (b) { b.disabled = true; }
     }
@@ -680,14 +870,14 @@ var Portas = (function () {
     }
     el("pt-dicabox").innerHTML = '<div class="dica-titulo">Dica da Lumia</div>' + html;
     el("pt-dicabox").className = "pt-dicabox";
-    if (PJ.dicaAtual >= 3 && (d.tipo == "id" || d.tipo == "faltando")) { riscarUma(); }
+    if (PJ.dicaAtual >= 3 && !ehBinaria(d) && d.tipo != "ligar") { riscarUma(); }
     if (PJ.dicaAtual >= 3) { el("pt-dica").disabled = true; }
     somTocar("dica");
   }
 
   function riscarUma() {
     var d = PJ.d;
-    var certa = d.tipo == "id" ? d.gate : d.certa;
+    var certa = certaDe(d);
     var bs = el("pt-opcoes").querySelectorAll("[data-resp]:not([disabled])");
     var cand = [];
     for (var i = 0; i < bs.length; i++) { if (bs[i].getAttribute("data-resp") != certa) { cand.push(bs[i]); } }
@@ -706,7 +896,17 @@ var Portas = (function () {
 
   function explicacao(d) {
     var s = "";
-    if (d.tipo == "saida" || d.tipo == "ligar") {
+    if (d.tipo == "teoria") {
+      s += '<div class="dica-titulo">Resposta: ' + d.certa + "</div>" +
+        '<p class="dica-linha regra"><b>i</b><span>' + d.q.x + "</span></p>";
+    } else if (d.tipo == "contar") {
+      s += '<div class="dica-titulo">A lâmpada acende em ' + d.n + " de " + d.total + " linhas</div>" +
+        '<p class="dica-linha regra"><b>i</b><span>Para contar, monte a tabela-verdade e resolva uma linha de cada vez.</span></p>';
+    } else if (d.tipo == "qual") {
+      s += '<div class="dica-titulo">É a porta ' + d.certa + " (" + PORTAS[d.certa].pt + ")</div>" +
+        '<p class="dica-linha"><b>1</b><span>' + d.certa + "(" + d.a + ", " + d.b + ") = <strong>" + d.alvo + "</strong></span></p>" +
+        '<p class="dica-linha regra"><b>i</b><span>' + PORTAS[d.certa].regra + "</span></p>";
+    } else if (d.tipo == "saida" || d.tipo == "ligar" || d.tipo == "expr") {
       var portas = d.circ.portas;
       s += '<div class="dica-titulo">Passo a passo</div>';
       for (var i = 0; i < portas.length; i++) {
@@ -738,8 +938,21 @@ var Portas = (function () {
 
     if (d.tipo != "ligar") { marcarBotao(resp, "certo"); }
     var palco = el("pt-circuito");
-    if (d.tipo == "saida") {
+    if (d.tipo == "saida" || d.tipo == "expr") {
+      el("pt-palco").classList.remove("oculto");
       palco.innerHTML = svgCircuito(d.circ, { valores: true, mostrar: true, atrasos: true, nomes: true });
+    } else if (d.tipo == "contar") {
+      var tb = el("pt-tabela");
+      tb.classList.remove("oculto");
+      tb.innerHTML = tabelaHtmlDe(d.tabela);
+    } else if (d.tipo == "qual") {
+      el("pt-palco").classList.remove("oculto");
+      var cq = circuitoDaPorta(d.certa);
+      var vq = { A: d.a, B: d.b };
+      calcular(cq.raiz, vq);
+      palco.innerHTML = '<div class="id-palco certo">' + svgCircuito(cq, { valores: true, mostrar: true, atrasos: true, nomes: true }) + "</div>";
+    } else if (d.tipo == "teoria") {
+      // sem desenho: só a explicação
     } else if (d.tipo == "faltando") {
       palco.innerHTML = svgCircuito(d.circ, { valores: false, mostrar: false, nomes: true, lampada: null });
       // mostra o circuito inteiro funcionando com uma linha da tabela
@@ -788,7 +1001,8 @@ var Portas = (function () {
 
   function terminar() {
     var acertosLimpos = PJ.limpas;
-    var est = acertosLimpos >= 5 ? 3 : (acertosLimpos >= 3 ? 2 : 1);
+    var razao = acertosLimpos / PJ.total;
+    var est = razao >= 0.75 ? 3 : (razao >= 0.45 ? 2 : 1);
     var d = Perfil.dados.portas;
     var antes = d[PJ.nivel] || 0;
     if (est > antes) { d[PJ.nivel] = est; }
@@ -868,9 +1082,9 @@ var Portas = (function () {
     if (PJ.resolvido) { return; }
     if (ev.key == "h" || ev.key == "H") { pedirDica(); return; }
     var bs = el("pt-opcoes").querySelectorAll("[data-resp]");
-    if (PJ.d.tipo == "saida" && (ev.key == "0" || ev.key == "1")) { responder(ev.key); return; }
+    if (ehBinaria(PJ.d) && (ev.key == "0" || ev.key == "1")) { responder(ev.key); return; }
     var n = parseInt(ev.key, 10);
-    if (PJ.d.tipo != "saida" && n >= 1 && n <= bs.length && !bs[n - 1].disabled) { responder(bs[n - 1].getAttribute("data-resp")); }
+    if (!ehBinaria(PJ.d) && n >= 1 && n <= bs.length && !bs[n - 1].disabled) { responder(bs[n - 1].getAttribute("data-resp")); }
   }
 
   function ligar() {
@@ -893,5 +1107,5 @@ var Portas = (function () {
     el("pt-resumo-niveis").onclick = function () { somTocar("clique"); sairDoNivel(); };
   }
 
-  return { abrir: abrir, fechar: fechar, tecla: tecla, ligar: ligar, aba: aba };
+  return { abrir: abrir, fechar: fechar, tecla: tecla, ligar: ligar, aba: aba, mini: svgPortaMini, info: PORTAS, ordem: ORDEM };
 })();
